@@ -19,6 +19,8 @@ SECRET_PATTERNS = [
     ]
 ]
 IGNORED_PARTS = {"node_modules", ".next", "__pycache__", ".git"}
+IGNORED_NAMES = {".env", ".env.dev.local", ".env.prod.local"}
+IGNORED_PREFIXES = (".env.",)
 INTENTIONAL_PATTERN_FILES = {
     ".gitleaks.toml",
     ".semgrep.yml",
@@ -38,6 +40,8 @@ def iter_source_files() -> list[Path]:
         if not path.is_file():
             continue
         if any(part in IGNORED_PARTS for part in path.parts):
+            continue
+        if path.name in IGNORED_NAMES or path.name.startswith(IGNORED_PREFIXES):
             continue
         if path.suffix.lower() in {".pyc", ".docx", ".pdf", ".png", ".jpg", ".jpeg", ".zip"}:
             continue

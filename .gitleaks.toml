@@ -9,9 +9,12 @@ paths = [
   '''scripts/quality/production_readiness_check\.py''',
   '''docs/security/FRONTEND_AUTH\.md''',
   '''docs/security/SECRETS_HANDLING\.md''',
+  '''\.env(\..*)?$''',
+  '''\.secrets/''',
   '''apps/frontend/node_modules/''',
   '''apps/frontend/\.next/''',
   '''apps/backend/pytest-cache-files-.*''',
+  '''runtime/''',
   '''rendered_apso_plan/''',
 ]
 

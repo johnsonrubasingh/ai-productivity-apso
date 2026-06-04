@@ -209,6 +209,8 @@ class BitbucketClient:
         )
         async with httpx.AsyncClient(timeout=30) as client:
             response = await client.get(url, auth=(username, token), headers={"Accept": "application/json"})
+            if response.status_code == 404:
+                return {"number_of_test_cases": 0, "not_available": True}
             response.raise_for_status()
             return response.json()
 
@@ -217,7 +219,7 @@ class BitbucketClient:
             return {"values": [], "mock": True}
 
         username, token = self._credentials()
-        source_path = f"/{path.strip('/')}" if path else ""
+        source_path = f"/{path.strip('/')}" if path else "/"
         url = (
             f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
             f"{repo_slug}/src/{branch}{source_path}"
@@ -236,7 +238,7 @@ class BitbucketClient:
             f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
             f"{repo_slug}/src/{branch}/{path.strip('/')}"
         )
-        async with httpx.AsyncClient(timeout=30) as client:
+        async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
             response = await client.get(url, auth=(username, token), headers={"Accept": "text/plain"})
             response.raise_for_status()
             return response.text
@@ -250,7 +252,7 @@ class BitbucketClient:
             f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
             f"{repo_slug}/pullrequests/{pull_request_id}/diff"
         )
-        async with httpx.AsyncClient(timeout=30) as client:
+        async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
             response = await client.get(url, auth=(username, token), headers={"Accept": "text/plain"})
             response.raise_for_status()
             return response.text
