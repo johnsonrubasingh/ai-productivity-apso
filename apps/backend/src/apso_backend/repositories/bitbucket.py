@@ -1,12 +1,14 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from apso_backend.db.models import Commit, PipelineRun, PullRequest, Repository
+from apso_backend.db.models import BitbucketTestRun, CodeEvidence, Commit, PipelineRun, PullRequest, Repository
 from apso_backend.schemas.bitbucket import (
+    BitbucketCodeEvidenceSummary,
     BitbucketPipelineSummary,
     BitbucketCommitSummary,
     BitbucketPullRequestSummary,
     BitbucketRepositorySummary,
+    BitbucketTestRunSummary,
 )
 
 
@@ -153,5 +155,82 @@ class BitbucketRepository:
             existing.status = pipeline.result or pipeline.state
             existing.branch = pipeline.branch
             existing.commit_sha = pipeline.commit_sha
+            existing.raw_payload = raw_payload
+        return existing
+
+    def upsert_test_run(
+        self,
+        *,
+        tenant_id: str,
+        repository_id: str | None,
+        test_run: BitbucketTestRunSummary,
+        raw_payload: dict,
+    ) -> BitbucketTestRun:
+        external_id = f"{test_run.pipeline_uuid}:{test_run.step_uuid}"
+        existing = self.session.scalar(
+            select(BitbucketTestRun).where(
+                BitbucketTestRun.tenant_id == tenant_id,
+                BitbucketTestRun.external_id == external_id,
+            )
+        )
+        if existing is None:
+            existing = BitbucketTestRun(
+                tenant_id=tenant_id,
+                repository_id=repository_id,
+                pipeline_uuid=test_run.pipeline_uuid,
+                step_uuid=test_run.step_uuid,
+                external_id=external_id,
+                total_tests=test_run.total_tests,
+                passed_tests=test_run.passed_tests,
+                failed_tests=test_run.failed_tests,
+                skipped_tests=test_run.skipped_tests,
+                duration_seconds=test_run.duration_seconds,
+                raw_payload=raw_payload,
+            )
+            self.session.add(existing)
+        else:
+            existing.repository_id = repository_id
+            existing.total_tests = test_run.total_tests
+            existing.passed_tests = test_run.passed_tests
+            existing.failed_tests = test_run.failed_tests
+            existing.skipped_tests = test_run.skipped_tests
+            existing.duration_seconds = test_run.duration_seconds
+            existing.raw_payload = raw_payload
+        return existing
+
+    def upsert_code_evidence(
+        self,
+        *,
+        tenant_id: str,
+        repository_id: str | None,
+        evidence: BitbucketCodeEvidenceSummary,
+        raw_payload: dict,
+    ) -> CodeEvidence:
+        existing = self.session.scalar(
+            select(CodeEvidence).where(
+                CodeEvidence.tenant_id == tenant_id,
+                CodeEvidence.provider == "bitbucket",
+                CodeEvidence.reference == evidence.reference,
+            )
+        )
+        if existing is None:
+            existing = CodeEvidence(
+                tenant_id=tenant_id,
+                repository_id=repository_id,
+                provider="bitbucket",
+                evidence_type=evidence.evidence_type,
+                reference=evidence.reference,
+                file_path=evidence.file_path,
+                commit_sha=evidence.commit_sha,
+                content_excerpt=evidence.content_excerpt,
+                raw_payload=raw_payload,
+            )
+            self.session.add(existing)
+        else:
+            existing.repository_id = repository_id
+            existing.evidence_type = evidence.evidence_type
+            existing.file_path = evidence.file_path
+            existing.commit_sha = evidence.commit_sha
+            existing.content_excerpt = evidence.content_excerpt
             existing.raw_payload = raw_payload
         return existing

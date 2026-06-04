@@ -126,6 +126,42 @@ class PipelineRun(Base, IdMixin, TenantScopedMixin, TimestampMixin):
     raw_payload: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
 
 
+class BitbucketTestRun(Base, IdMixin, TenantScopedMixin, TimestampMixin):
+    __tablename__ = "bitbucket_test_runs"
+
+    repository_id: Mapped[str | None] = mapped_column(ForeignKey("repositories.id"), index=True)
+    pipeline_uuid: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
+    step_uuid: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
+    external_id: Mapped[str] = mapped_column(String(260), nullable=False)
+    total_tests: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    passed_tests: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    failed_tests: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    skipped_tests: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    duration_seconds: Mapped[int | None] = mapped_column(Integer)
+    raw_payload: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+
+    __table_args__ = (
+        Index("ix_bitbucket_test_runs_tenant_external", "tenant_id", "external_id", unique=True),
+    )
+
+
+class CodeEvidence(Base, IdMixin, TenantScopedMixin, TimestampMixin):
+    __tablename__ = "code_evidence"
+
+    repository_id: Mapped[str | None] = mapped_column(ForeignKey("repositories.id"), index=True)
+    provider: Mapped[str] = mapped_column(String(80), nullable=False, default="bitbucket")
+    evidence_type: Mapped[str] = mapped_column(String(80), nullable=False)
+    reference: Mapped[str] = mapped_column(String(260), nullable=False)
+    file_path: Mapped[str | None] = mapped_column(Text)
+    commit_sha: Mapped[str | None] = mapped_column(String(120), index=True)
+    content_excerpt: Mapped[str | None] = mapped_column(Text)
+    raw_payload: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+
+    __table_args__ = (
+        Index("ix_code_evidence_tenant_reference", "tenant_id", "provider", "reference", unique=True),
+    )
+
+
 class AiRun(Base, IdMixin, TenantScopedMixin, TimestampMixin):
     __tablename__ = "ai_runs"
 

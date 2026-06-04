@@ -183,3 +183,97 @@ class BitbucketClient:
             )
             response.raise_for_status()
             return response.json()
+
+    async def list_pipeline_steps(self, repo_slug: str, pipeline_uuid: str) -> dict:
+        if self.settings.mode != "live_read_only":
+            return {"values": [], "mock": True}
+
+        username, token = self._credentials()
+        url = (
+            f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
+            f"{repo_slug}/pipelines/{pipeline_uuid}/steps"
+        )
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.get(url, auth=(username, token), headers={"Accept": "application/json"})
+            response.raise_for_status()
+            return response.json()
+
+    async def get_pipeline_step_test_report(self, repo_slug: str, pipeline_uuid: str, step_uuid: str) -> dict:
+        if self.settings.mode != "live_read_only":
+            return {"mock": True}
+
+        username, token = self._credentials()
+        url = (
+            f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
+            f"{repo_slug}/pipelines/{pipeline_uuid}/steps/{step_uuid}/test_reports"
+        )
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.get(url, auth=(username, token), headers={"Accept": "application/json"})
+            response.raise_for_status()
+            return response.json()
+
+    async def list_source_files(self, repo_slug: str, branch: str = "develop", path: str = "") -> dict:
+        if self.settings.mode != "live_read_only":
+            return {"values": [], "mock": True}
+
+        username, token = self._credentials()
+        source_path = f"/{path.strip('/')}" if path else ""
+        url = (
+            f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
+            f"{repo_slug}/src/{branch}{source_path}"
+        )
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.get(url, auth=(username, token), headers={"Accept": "application/json"})
+            response.raise_for_status()
+            return response.json()
+
+    async def get_source_file(self, repo_slug: str, branch: str, path: str) -> str:
+        if self.settings.mode != "live_read_only":
+            return ""
+
+        username, token = self._credentials()
+        url = (
+            f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
+            f"{repo_slug}/src/{branch}/{path.strip('/')}"
+        )
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.get(url, auth=(username, token), headers={"Accept": "text/plain"})
+            response.raise_for_status()
+            return response.text
+
+    async def get_pull_request_diff(self, repo_slug: str, pull_request_id: int) -> str:
+        if self.settings.mode != "live_read_only":
+            return ""
+
+        username, token = self._credentials()
+        url = (
+            f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
+            f"{repo_slug}/pullrequests/{pull_request_id}/diff"
+        )
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.get(url, auth=(username, token), headers={"Accept": "text/plain"})
+            response.raise_for_status()
+            return response.text
+
+    async def get_commit_diff(self, repo_slug: str, commit_hash: str) -> str:
+        if self.settings.mode != "live_read_only":
+            return ""
+
+        username, token = self._credentials()
+        url = (
+            f"https://api.bitbucket.org/2.0/repositories/{self.settings.workspace}/"
+            f"{repo_slug}/diff/{commit_hash}"
+        )
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.get(url, auth=(username, token), headers={"Accept": "text/plain"})
+            response.raise_for_status()
+            return response.text
+
+    def _credentials(self) -> tuple[str, str]:
+        import os
+
+        username = os.getenv(self.settings.username_env)
+        token = os.getenv(self.settings.token_env)
+        if not username or not token:
+            raise RuntimeError("Bitbucket credentials are not configured")
+        return username, token

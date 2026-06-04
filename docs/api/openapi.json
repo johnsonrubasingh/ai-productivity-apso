@@ -44,6 +44,7 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": true,
                   "type": "object",
                   "title": "Response Runtime Config Api V1 Config Runtime Get"
                 }
@@ -119,6 +120,7 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": true,
                   "type": "object",
                   "title": "Response Check Jira Connection Api V1 Integrations Jira Check Get"
                 }
@@ -169,6 +171,7 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": true,
                   "type": "object",
                   "title": "Response Check Bitbucket Connection Api V1 Integrations Bitbucket Check Get"
                 }
@@ -248,6 +251,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -365,6 +416,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "responses": {
@@ -481,6 +580,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "responses": {
@@ -587,6 +734,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "responses": {
@@ -596,6 +791,353 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BitbucketPipelineListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines/{pipeline_uuid}/steps": {
+      "get": {
+        "tags": [
+          "integrations"
+        ],
+        "summary": "List Bitbucket Pipeline Steps",
+        "operationId": "list_bitbucket_pipeline_steps_api_v1_integrations_bitbucket_repositories__repo_slug__pipelines__pipeline_uuid__steps_get",
+        "parameters": [
+          {
+            "name": "repo_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Repo Slug"
+            }
+          },
+          {
+            "name": "pipeline_uuid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Pipeline Uuid"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Tenant-Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketPipelineStepListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/bitbucket/repositories/{repo_slug}/source": {
+      "get": {
+        "tags": [
+          "integrations"
+        ],
+        "summary": "List Bitbucket Source Files",
+        "operationId": "list_bitbucket_source_files_api_v1_integrations_bitbucket_repositories__repo_slug__source_get",
+        "parameters": [
+          {
+            "name": "repo_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Repo Slug"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "develop",
+              "title": "Branch"
+            }
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Path"
+            }
+          },
+          {
+            "name": "max_files",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Max Files"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Tenant-Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketSourceFileListResponse"
                 }
               }
             }
@@ -683,6 +1225,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -800,6 +1390,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "requestBody": {
@@ -915,6 +1553,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -1032,6 +1718,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "requestBody": {
@@ -1051,6 +1785,498 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BitbucketPipelineIngestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines/tests/ingest": {
+      "post": {
+        "tags": [
+          "integrations"
+        ],
+        "summary": "Ingest Bitbucket Pipeline Tests",
+        "operationId": "ingest_bitbucket_pipeline_tests_api_v1_integrations_bitbucket_repositories__repo_slug__pipelines_tests_ingest_post",
+        "parameters": [
+          {
+            "name": "repo_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Repo Slug"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Tenant-Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BitbucketPipelineTestIngestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketPipelineTestIngestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/bitbucket/repositories/{repo_slug}/source/ingest": {
+      "post": {
+        "tags": [
+          "integrations"
+        ],
+        "summary": "Ingest Bitbucket Source Evidence",
+        "operationId": "ingest_bitbucket_source_evidence_api_v1_integrations_bitbucket_repositories__repo_slug__source_ingest_post",
+        "parameters": [
+          {
+            "name": "repo_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Repo Slug"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Tenant-Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BitbucketSourceEvidenceIngestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketCodeEvidenceIngestResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/bitbucket/repositories/{repo_slug}/diff/ingest": {
+      "post": {
+        "tags": [
+          "integrations"
+        ],
+        "summary": "Ingest Bitbucket Diff Evidence",
+        "operationId": "ingest_bitbucket_diff_evidence_api_v1_integrations_bitbucket_repositories__repo_slug__diff_ingest_post",
+        "parameters": [
+          {
+            "name": "repo_slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Repo Slug"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Tenant-Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BitbucketDiffEvidenceIngestRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BitbucketCodeEvidenceIngestResponse"
                 }
               }
             }
@@ -1138,6 +2364,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -1271,6 +2545,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "requestBody": {
@@ -1345,6 +2667,7 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "additionalProperties": true,
                   "type": "object",
                   "title": "Response Provider Health Api V1 Ai Provider Health Get"
                 }
@@ -1424,6 +2747,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -1546,6 +2917,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "requestBody": {
@@ -1652,6 +3071,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -1760,6 +3227,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "requestBody": {
@@ -1797,44 +3312,135 @@
       }
     },
     "/api/v1/core/tenants": {
-      "get": {
-        "tags": [
-          "core"
-        ],
-        "summary": "List Tenants",
-        "operationId": "list_tenants_api_v1_core_tenants_get",
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/TenantRead"
-                  },
-                  "type": "array",
-                  "title": "Response List Tenants Api V1 Core Tenants Get"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "core"
         ],
         "summary": "Create Tenant",
         "operationId": "create_tenant_api_v1_core_tenants_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          },
+          {
+            "name": "x-tenant-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Tenant-Id"
+            }
+          },
+          {
+            "name": "x-user-id",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-User-Id"
+            }
+          },
+          {
+            "name": "x-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
+          }
+        ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/TenantCreate"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
@@ -1853,6 +3459,29 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "core"
+        ],
+        "summary": "List Tenants",
+        "operationId": "list_tenants_api_v1_core_tenants_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TenantRead"
+                  },
+                  "title": "Response List Tenants Api V1 Core Tenants Get"
                 }
               }
             }
@@ -1930,6 +3559,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -2035,6 +3712,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -2147,6 +3872,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "responses": {
@@ -2247,6 +4020,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -2379,6 +4200,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "responses": {
@@ -2488,6 +4357,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -2621,6 +4538,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "requestBody": {
@@ -2727,6 +4692,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -2835,6 +4848,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "requestBody": {
@@ -2941,6 +5002,54 @@
                 }
               ],
               "title": "X-Role"
+            }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
             }
           }
         ],
@@ -3107,6 +5216,54 @@
               ],
               "title": "X-Role"
             }
+          },
+          {
+            "name": "x-apso-dev-tenant",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Tenant"
+            }
+          },
+          {
+            "name": "x-apso-dev-user",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-User"
+            }
+          },
+          {
+            "name": "x-apso-dev-role",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Apso-Dev-Role"
+            }
           }
         ],
         "responses": {
@@ -3258,6 +5415,99 @@
         ],
         "title": "AiTaskDefinition"
       },
+      "BitbucketCodeEvidenceIngestResponse": {
+        "properties": {
+          "received": {
+            "type": "integer",
+            "title": "Received"
+          },
+          "upserted": {
+            "type": "integer",
+            "title": "Upserted"
+          },
+          "evidence": {
+            "items": {
+              "$ref": "#/components/schemas/BitbucketCodeEvidenceSummary"
+            },
+            "type": "array",
+            "title": "Evidence"
+          },
+          "read_only": {
+            "type": "boolean",
+            "title": "Read Only",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "received",
+          "upserted",
+          "evidence"
+        ],
+        "title": "BitbucketCodeEvidenceIngestResponse"
+      },
+      "BitbucketCodeEvidenceSummary": {
+        "properties": {
+          "evidence_type": {
+            "type": "string",
+            "title": "Evidence Type"
+          },
+          "reference": {
+            "type": "string",
+            "title": "Reference"
+          },
+          "file_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Path"
+          },
+          "commit_sha": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commit Sha"
+          },
+          "content_excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content Excerpt"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "evidence_type",
+          "reference"
+        ],
+        "title": "BitbucketCodeEvidenceSummary"
+      },
       "BitbucketCommitIngestRequest": {
         "properties": {
           "repository_id": {
@@ -3400,6 +5650,45 @@
         ],
         "title": "BitbucketCommitSummary"
       },
+      "BitbucketDiffEvidenceIngestRequest": {
+        "properties": {
+          "repository_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Repository Id"
+          },
+          "pull_request_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pull Request Id"
+          },
+          "commit_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commit Hash"
+          }
+        },
+        "type": "object",
+        "title": "BitbucketDiffEvidenceIngestRequest"
+      },
       "BitbucketPipelineIngestRequest": {
         "properties": {
           "repository_id": {
@@ -3469,6 +5758,95 @@
         ],
         "title": "BitbucketPipelineListResponse"
       },
+      "BitbucketPipelineStepListResponse": {
+        "properties": {
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/BitbucketPipelineStepSummary"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "read_only": {
+            "type": "boolean",
+            "title": "Read Only",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "steps"
+        ],
+        "title": "BitbucketPipelineStepListResponse"
+      },
+      "BitbucketPipelineStepSummary": {
+        "properties": {
+          "uuid": {
+            "type": "string",
+            "title": "Uuid"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result"
+          },
+          "started_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Started On"
+          },
+          "completed_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Completed On"
+          }
+        },
+        "type": "object",
+        "required": [
+          "uuid"
+        ],
+        "title": "BitbucketPipelineStepSummary"
+      },
       "BitbucketPipelineSummary": {
         "properties": {
           "uuid": {
@@ -3530,6 +5908,72 @@
           "state"
         ],
         "title": "BitbucketPipelineSummary"
+      },
+      "BitbucketPipelineTestIngestRequest": {
+        "properties": {
+          "repository_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Repository Id"
+          },
+          "pipeline_uuid": {
+            "type": "string",
+            "title": "Pipeline Uuid"
+          },
+          "step_uuid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Step Uuid"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pipeline_uuid"
+        ],
+        "title": "BitbucketPipelineTestIngestRequest"
+      },
+      "BitbucketPipelineTestIngestResponse": {
+        "properties": {
+          "received": {
+            "type": "integer",
+            "title": "Received"
+          },
+          "upserted": {
+            "type": "integer",
+            "title": "Upserted"
+          },
+          "test_runs": {
+            "items": {
+              "$ref": "#/components/schemas/BitbucketTestRunSummary"
+            },
+            "type": "array",
+            "title": "Test Runs"
+          },
+          "read_only": {
+            "type": "boolean",
+            "title": "Read Only",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "received",
+          "upserted",
+          "test_runs"
+        ],
+        "title": "BitbucketPipelineTestIngestResponse"
       },
       "BitbucketPullRequestIngestRequest": {
         "properties": {
@@ -3807,6 +6251,165 @@
           "full_name"
         ],
         "title": "BitbucketRepositorySummary"
+      },
+      "BitbucketSourceEvidenceIngestRequest": {
+        "properties": {
+          "repository_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Repository Id"
+          },
+          "branch": {
+            "type": "string",
+            "title": "Branch",
+            "default": "develop"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path",
+            "default": ""
+          },
+          "max_files": {
+            "type": "integer",
+            "title": "Max Files",
+            "default": 100
+          }
+        },
+        "type": "object",
+        "title": "BitbucketSourceEvidenceIngestRequest"
+      },
+      "BitbucketSourceFileListResponse": {
+        "properties": {
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/BitbucketSourceFileSummary"
+            },
+            "type": "array",
+            "title": "Files"
+          },
+          "read_only": {
+            "type": "boolean",
+            "title": "Read Only",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "files"
+        ],
+        "title": "BitbucketSourceFileListResponse"
+      },
+      "BitbucketSourceFileSummary": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "commit_sha": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commit Sha"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "title": "BitbucketSourceFileSummary"
+      },
+      "BitbucketTestRunSummary": {
+        "properties": {
+          "pipeline_uuid": {
+            "type": "string",
+            "title": "Pipeline Uuid"
+          },
+          "step_uuid": {
+            "type": "string",
+            "title": "Step Uuid"
+          },
+          "total_tests": {
+            "type": "integer",
+            "title": "Total Tests",
+            "default": 0
+          },
+          "passed_tests": {
+            "type": "integer",
+            "title": "Passed Tests",
+            "default": 0
+          },
+          "failed_tests": {
+            "type": "integer",
+            "title": "Failed Tests",
+            "default": 0
+          },
+          "skipped_tests": {
+            "type": "integer",
+            "title": "Skipped Tests",
+            "default": 0
+          },
+          "duration_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Seconds"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "pipeline_uuid",
+          "step_uuid"
+        ],
+        "title": "BitbucketTestRunSummary"
       },
       "CodeQualityAnalyzeRequest": {
         "properties": {
@@ -4597,12 +7200,16 @@
             "enum": [
               "jira_ingest",
               "bitbucket_repo_ingest",
+              "bitbucket_test_ingest",
+              "bitbucket_source_evidence_ingest",
+              "bitbucket_diff_evidence_ingest",
               "definition_gap_analysis",
               "release_readiness_assessment"
             ],
             "title": "Job Name"
           },
           "payload": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Payload"
           }
@@ -4620,6 +7227,9 @@
             "enum": [
               "jira_ingest",
               "bitbucket_repo_ingest",
+              "bitbucket_test_ingest",
+              "bitbucket_source_evidence_ingest",
+              "bitbucket_diff_evidence_ingest",
               "definition_gap_analysis",
               "release_readiness_assessment"
             ],
@@ -4643,6 +7253,7 @@
             "title": "Mode"
           },
           "result": {
+            "additionalProperties": true,
             "type": "object",
             "title": "Result"
           },

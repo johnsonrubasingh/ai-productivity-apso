@@ -18,18 +18,25 @@ from apso_backend.integrations.jira.client import JiraClient
 from apso_backend.integrations.jira.normalizer import normalize_search_response
 from apso_backend.schemas.integrations import IntegrationSummary
 from apso_backend.schemas.bitbucket import (
+    BitbucketCodeEvidenceIngestResponse,
     BitbucketCommitIngestRequest,
     BitbucketCommitIngestResponse,
     BitbucketCommitListResponse,
+    BitbucketDiffEvidenceIngestRequest,
     BitbucketPipelineIngestRequest,
     BitbucketPipelineIngestResponse,
     BitbucketPipelineListResponse,
+    BitbucketPipelineStepListResponse,
+    BitbucketPipelineTestIngestRequest,
+    BitbucketPipelineTestIngestResponse,
     BitbucketPullRequestIngestRequest,
     BitbucketPullRequestIngestResponse,
     BitbucketPullRequestListResponse,
     BitbucketRepositoryIngestRequest,
     BitbucketRepositoryIngestResponse,
     BitbucketRepositoryListResponse,
+    BitbucketSourceEvidenceIngestRequest,
+    BitbucketSourceFileListResponse,
 )
 from apso_backend.db.session import get_db_session
 from apso_backend.schemas.jira import (
@@ -154,6 +161,52 @@ async def list_bitbucket_pipelines(
     return BitbucketPipelineListResponse(pipelines=pipelines)
 
 
+@router.get(
+    "/bitbucket/repositories/{repo_slug}/pipelines/{pipeline_uuid}/steps",
+    response_model=BitbucketPipelineStepListResponse,
+)
+async def list_bitbucket_pipeline_steps(
+    repo_slug: str,
+    pipeline_uuid: str,
+    context: RequestContext = Depends(get_request_context),
+    session: Session = Depends(get_db_session),
+) -> BitbucketPipelineStepListResponse:
+    del context
+    try:
+        steps = await BitbucketIngestionService(session).list_pipeline_steps(
+            repo_slug=repo_slug,
+            pipeline_uuid=pipeline_uuid,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return BitbucketPipelineStepListResponse(steps=steps)
+
+
+@router.get(
+    "/bitbucket/repositories/{repo_slug}/source",
+    response_model=BitbucketSourceFileListResponse,
+)
+async def list_bitbucket_source_files(
+    repo_slug: str,
+    branch: str = "develop",
+    path: str = "",
+    max_files: int = 100,
+    context: RequestContext = Depends(get_request_context),
+    session: Session = Depends(get_db_session),
+) -> BitbucketSourceFileListResponse:
+    del context
+    try:
+        files = await BitbucketIngestionService(session).list_source_files(
+            repo_slug=repo_slug,
+            branch=branch,
+            path=path,
+            max_files=max_files,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return BitbucketSourceFileListResponse(files=files)
+
+
 @router.post("/bitbucket/repositories/ingest", response_model=BitbucketRepositoryIngestResponse)
 async def ingest_bitbucket_repositories(
     request: BitbucketRepositoryIngestRequest,
@@ -268,6 +321,103 @@ async def ingest_bitbucket_pipelines(
         commit=True,
     )
     return BitbucketPipelineIngestResponse.model_validate(result.model_dump())
+
+
+@router.post(
+    "/bitbucket/repositories/{repo_slug}/pipelines/tests/ingest",
+    response_model=BitbucketPipelineTestIngestResponse,
+)
+async def ingest_bitbucket_pipeline_tests(
+    repo_slug: str,
+    request: BitbucketPipelineTestIngestRequest,
+    context: RequestContext = Depends(require_min_role("lead")),
+    session: Session = Depends(get_db_session),
+) -> BitbucketPipelineTestIngestResponse:
+    service = BitbucketIngestionService(session)
+    try:
+        result = await service.ingest_pipeline_tests(
+            tenant_id=context.tenant_id,
+            repository_id=request.repository_id,
+            repo_slug=repo_slug,
+            pipeline_uuid=request.pipeline_uuid,
+            step_uuid=request.step_uuid,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    AuditService(session).record(
+        context=context,
+        action="bitbucket.pipeline_tests_ingested",
+        resource_type="bitbucket_test_run",
+        resource_id=request.pipeline_uuid,
+        metadata={"received": result.received, "upserted": result.upserted},
+        commit=True,
+    )
+    return BitbucketPipelineTestIngestResponse.model_validate(result.model_dump())
+
+
+@router.post(
+    "/bitbucket/repositories/{repo_slug}/source/ingest",
+    response_model=BitbucketCodeEvidenceIngestResponse,
+)
+async def ingest_bitbucket_source_evidence(
+    repo_slug: str,
+    request: BitbucketSourceEvidenceIngestRequest,
+    context: RequestContext = Depends(require_min_role("lead")),
+    session: Session = Depends(get_db_session),
+) -> BitbucketCodeEvidenceIngestResponse:
+    service = BitbucketIngestionService(session)
+    try:
+        result = await service.ingest_source_evidence(
+            tenant_id=context.tenant_id,
+            repository_id=request.repository_id,
+            repo_slug=repo_slug,
+            branch=request.branch,
+            path=request.path,
+            max_files=request.max_files,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    AuditService(session).record(
+        context=context,
+        action="bitbucket.source_evidence_ingested",
+        resource_type="code_evidence",
+        resource_id=repo_slug,
+        metadata={"received": result.received, "upserted": result.upserted, "branch": request.branch},
+        commit=True,
+    )
+    return BitbucketCodeEvidenceIngestResponse.model_validate(result.model_dump())
+
+
+@router.post(
+    "/bitbucket/repositories/{repo_slug}/diff/ingest",
+    response_model=BitbucketCodeEvidenceIngestResponse,
+)
+async def ingest_bitbucket_diff_evidence(
+    repo_slug: str,
+    request: BitbucketDiffEvidenceIngestRequest,
+    context: RequestContext = Depends(require_min_role("lead")),
+    session: Session = Depends(get_db_session),
+) -> BitbucketCodeEvidenceIngestResponse:
+    service = BitbucketIngestionService(session)
+    try:
+        result = await service.ingest_diff_evidence(
+            tenant_id=context.tenant_id,
+            repository_id=request.repository_id,
+            repo_slug=repo_slug,
+            pull_request_id=request.pull_request_id,
+            commit_hash=request.commit_hash,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    AuditService(session).record(
+        context=context,
+        action="bitbucket.diff_evidence_ingested",
+        resource_type="code_evidence",
+        resource_id=repo_slug,
+        metadata={"received": result.received, "upserted": result.upserted},
+        commit=True,
+    )
+    return BitbucketCodeEvidenceIngestResponse.model_validate(result.model_dump())
 
 
 @router.post("/jira/issues/search", response_model=JiraIssueSearchResponse)

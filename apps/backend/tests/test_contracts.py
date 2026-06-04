@@ -17,6 +17,7 @@ def test_jira_and_bitbucket_scopes_are_read_only(client: TestClient) -> None:
     assert "read_only" in jira["mvp_policy"]
 
     assert all(scope.startswith("read:") for scope in bitbucket["required_now"])
+    assert "read:test:bitbucket" in bitbucket["required_now"]
     assert "read_only" in bitbucket["mvp_policy"]
     assert any("write" in scope for scope in bitbucket["do_not_select_for_mvp"])
 
@@ -94,3 +95,20 @@ def test_quality_release_and_report_contracts(client: TestClient) -> None:
 def test_protected_routes_require_context(client: TestClient) -> None:
     response = client.get("/api/v1/integrations/bitbucket/repositories")
     assert response.status_code == 401
+
+    source = client.get("/api/v1/integrations/bitbucket/repositories/apso/source")
+    assert source.status_code == 401
+
+    steps = client.get("/api/v1/integrations/bitbucket/repositories/apso/pipelines/pipe-1/steps")
+    assert steps.status_code == 401
+
+
+def test_bitbucket_evidence_contracts_are_in_openapi(client: TestClient) -> None:
+    schema = client.get("/openapi.json").json()
+    paths = schema["paths"]
+
+    assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines/{pipeline_uuid}/steps" in paths
+    assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines/tests/ingest" in paths
+    assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/source" in paths
+    assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/source/ingest" in paths
+    assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/diff/ingest" in paths

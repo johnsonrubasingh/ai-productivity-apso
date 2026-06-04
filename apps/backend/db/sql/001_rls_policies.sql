@@ -23,6 +23,8 @@ alter table if exists repositories enable row level security;
 alter table if exists commits enable row level security;
 alter table if exists pull_requests enable row level security;
 alter table if exists pipeline_runs enable row level security;
+alter table if exists bitbucket_test_runs enable row level security;
+alter table if exists code_evidence enable row level security;
 alter table if exists ai_runs enable row level security;
 alter table if exists ai_findings enable row level security;
 alter table if exists audit_events enable row level security;
@@ -72,6 +74,16 @@ create policy tenant_isolation_pipeline_runs on pipeline_runs
   using (tenant_id = app.current_tenant_id())
   with check (tenant_id = app.current_tenant_id());
 
+drop policy if exists tenant_isolation_bitbucket_test_runs on bitbucket_test_runs;
+create policy tenant_isolation_bitbucket_test_runs on bitbucket_test_runs
+  using (tenant_id = app.current_tenant_id())
+  with check (tenant_id = app.current_tenant_id());
+
+drop policy if exists tenant_isolation_code_evidence on code_evidence;
+create policy tenant_isolation_code_evidence on code_evidence
+  using (tenant_id = app.current_tenant_id())
+  with check (tenant_id = app.current_tenant_id());
+
 drop policy if exists tenant_isolation_ai_runs on ai_runs;
 create policy tenant_isolation_ai_runs on ai_runs
   using (tenant_id = app.current_tenant_id())
@@ -86,4 +98,3 @@ drop policy if exists tenant_isolation_audit_events on audit_events;
 create policy tenant_isolation_audit_events on audit_events
   using (tenant_id = app.current_tenant_id())
   with check (tenant_id = app.current_tenant_id());
-

@@ -1,10 +1,14 @@
 from typing import Any
 
 from apso_backend.schemas.bitbucket import (
+    BitbucketCodeEvidenceSummary,
     BitbucketCommitSummary,
     BitbucketPipelineSummary,
+    BitbucketPipelineStepSummary,
     BitbucketPullRequestSummary,
     BitbucketRepositorySummary,
+    BitbucketSourceFileSummary,
+    BitbucketTestRunSummary,
 )
 
 
@@ -71,4 +75,88 @@ def normalize_pipeline(pipeline: dict[str, Any]) -> BitbucketPipelineSummary:
         branch=selector.get("pattern") or target.get("ref_name"),
         commit_sha=commit.get("hash"),
         source_url=html.get("href"),
+    )
+
+
+def normalize_pipeline_step(step: dict[str, Any]) -> BitbucketPipelineStepSummary:
+    state = step.get("state") or {}
+    return BitbucketPipelineStepSummary(
+        uuid=str(step.get("uuid", "")),
+        name=step.get("name"),
+        state=state.get("name"),
+        result=(state.get("result") or {}).get("name"),
+        started_on=step.get("started_on"),
+        completed_on=step.get("completed_on"),
+    )
+
+
+def normalize_test_report(
+    report: dict[str, Any],
+    *,
+    pipeline_uuid: str,
+    step_uuid: str,
+    source_url: str | None = None,
+) -> BitbucketTestRunSummary:
+    total = int(report.get("number_of_test_cases") or report.get("total") or 0)
+    failed = int(report.get("number_of_failed_test_cases") or report.get("failed") or 0)
+    skipped = int(report.get("number_of_skipped_test_cases") or report.get("skipped") or 0)
+    successful = int(report.get("number_of_successful_test_cases") or report.get("successful") or 0)
+    passed = successful if successful > 0 else max(0, total - failed - skipped)
+    duration = report.get("duration") or report.get("duration_seconds")
+    return BitbucketTestRunSummary(
+        pipeline_uuid=pipeline_uuid,
+        step_uuid=step_uuid,
+        total_tests=total,
+        passed_tests=passed,
+        failed_tests=failed,
+        skipped_tests=skipped,
+        duration_seconds=int(duration) if duration is not None else None,
+        source_url=source_url,
+    )
+
+
+def normalize_source_file(node: dict[str, Any]) -> BitbucketSourceFileSummary | None:
+    if node.get("type") != "commit_file":
+        return None
+    links = node.get("links", {})
+    html = links.get("html", {})
+    commit = node.get("commit") or {}
+    return BitbucketSourceFileSummary(
+        path=str(node.get("path", "")),
+        commit_sha=commit.get("hash"),
+        size=node.get("size"),
+        source_url=html.get("href"),
+    )
+
+
+def normalize_source_evidence(
+    source_file: BitbucketSourceFileSummary,
+    *,
+    branch: str,
+    content_excerpt: str | None = None,
+) -> BitbucketCodeEvidenceSummary:
+    reference = f"source:{branch}:{source_file.path}"
+    return BitbucketCodeEvidenceSummary(
+        evidence_type="source_file",
+        reference=reference,
+        file_path=source_file.path,
+        commit_sha=source_file.commit_sha,
+        content_excerpt=content_excerpt,
+        source_url=source_file.source_url,
+    )
+
+
+def normalize_diff_evidence(
+    *,
+    reference: str,
+    diff_text: str,
+    source_url: str | None = None,
+) -> BitbucketCodeEvidenceSummary:
+    return BitbucketCodeEvidenceSummary(
+        evidence_type="diff",
+        reference=reference,
+        file_path=None,
+        commit_sha=None,
+        content_excerpt=diff_text[:8000],
+        source_url=source_url,
     )

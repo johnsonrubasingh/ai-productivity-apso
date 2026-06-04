@@ -46,9 +46,13 @@ ingestion, explorer surfaces, CI gates, production Docker targets, a deployment
 runbook, JSON request logging, Prometheus metrics, OSS observability manifests,
 RBAC dependencies, in-memory rate limiting, and audit coverage for operator
 actions. Frontend production calls no longer send development headers and can use
-a session bearer token. CI now includes the locked security scanners. It still
-requires live production deployment, full Supabase Auth UI/session handling,
+a session bearer token. CI now includes the locked security scanners. Bitbucket
+backend coverage now includes repositories, pull requests, commits, pipelines,
+pipeline steps, pipeline test reports, source file evidence, and diff evidence.
+It still requires live production deployment, full Supabase Auth UI/session handling,
 Supabase production auth verification against real users, distributed
 Valkey-backed rate limiting before horizontal scaling, curated Grafana
 dashboards, container/image scanning validation on the real CI runner, and AWS
-integration once credentials are available.
+integration once credentials are available. Jira and Bitbucket also need live
+smoke validation with the configured read-only credentials before production
+onboarding.

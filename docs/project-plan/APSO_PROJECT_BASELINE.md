@@ -72,6 +72,16 @@ Build APSO as a read-only SDLC intelligence platform:
 - generate explainable AI findings
 - produce dashboards and proof-pack reports
 
+## Current Backend Completion Notes
+
+As of the current backend scaffold:
+
+- Jira read-only extraction is implemented for connection checks, JQL search, and issue ingestion.
+- Bitbucket read-only extraction is implemented for repositories, pull requests, commits, pipelines, pipeline steps, pipeline test reports, source file evidence, and diff evidence.
+- Bitbucket test-report extraction follows the Bitbucket Cloud pipeline step test report API and requires pipeline UUID plus step UUID, or pipeline UUID with step discovery enabled.
+- Code evidence ingestion stores bounded excerpts for source files and diffs so AI analysis can reference evidence without storing unlimited repository content.
+- Live Jira and Bitbucket smoke validation must still be executed in the target dev environment with the real read-only credentials.
+
 ## Backlog Only
 
 The following require future approval and are not part of MVP:
@@ -89,4 +99,3 @@ The following require future approval and are not part of MVP:
 - manage Bitbucket webhooks
 - enable paid model providers
 - enable live AWS integration
-

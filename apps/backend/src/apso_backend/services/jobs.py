@@ -54,6 +54,37 @@ class JobRunnerService:
             )
             return self._completed(request, result.model_dump())
 
+        if request.job_name == "bitbucket_test_ingest":
+            result = await BitbucketIngestionService(self.session).ingest_pipeline_tests(
+                tenant_id=context.tenant_id,
+                repository_id=request.payload.get("repository_id"),
+                repo_slug=request.payload["repo_slug"],
+                pipeline_uuid=request.payload["pipeline_uuid"],
+                step_uuid=request.payload.get("step_uuid"),
+            )
+            return self._completed(request, result.model_dump())
+
+        if request.job_name == "bitbucket_source_evidence_ingest":
+            result = await BitbucketIngestionService(self.session).ingest_source_evidence(
+                tenant_id=context.tenant_id,
+                repository_id=request.payload.get("repository_id"),
+                repo_slug=request.payload["repo_slug"],
+                branch=request.payload.get("branch", "develop"),
+                path=request.payload.get("path", ""),
+                max_files=int(request.payload.get("max_files", 100)),
+            )
+            return self._completed(request, result.model_dump())
+
+        if request.job_name == "bitbucket_diff_evidence_ingest":
+            result = await BitbucketIngestionService(self.session).ingest_diff_evidence(
+                tenant_id=context.tenant_id,
+                repository_id=request.payload.get("repository_id"),
+                repo_slug=request.payload["repo_slug"],
+                pull_request_id=request.payload.get("pull_request_id"),
+                commit_hash=request.payload.get("commit_hash"),
+            )
+            return self._completed(request, result.model_dump())
+
         return JobRunResponse(
             job_name=request.job_name,
             status="failed",
@@ -71,4 +102,3 @@ class JobRunnerService:
             result=result,
             note="Executed synchronously in backend dev mode. Temporal worker execution will use the same service contract.",
         )
-

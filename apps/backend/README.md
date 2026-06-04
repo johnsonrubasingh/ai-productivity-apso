@@ -92,10 +92,15 @@ The generated contract is written to `docs/api/openapi.json`.
 - `GET /api/v1/integrations/bitbucket/repositories/{repo_slug}/pull-requests`
 - `GET /api/v1/integrations/bitbucket/repositories/{repo_slug}/commits`
 - `GET /api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines`
+- `GET /api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines/{pipeline_uuid}/steps`
+- `GET /api/v1/integrations/bitbucket/repositories/{repo_slug}/source`
 - `POST /api/v1/integrations/bitbucket/repositories/ingest`
 - `POST /api/v1/integrations/bitbucket/repositories/{repo_slug}/pull-requests/ingest`
 - `POST /api/v1/integrations/bitbucket/repositories/{repo_slug}/commits/ingest`
 - `POST /api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines/ingest`
+- `POST /api/v1/integrations/bitbucket/repositories/{repo_slug}/pipelines/tests/ingest`
+- `POST /api/v1/integrations/bitbucket/repositories/{repo_slug}/source/ingest`
+- `POST /api/v1/integrations/bitbucket/repositories/{repo_slug}/diff/ingest`
 - `GET /api/v1/ai/tasks`
 - `GET /api/v1/ai/provider/health`
 - `POST /api/v1/engines/definition-gap/analyze`
