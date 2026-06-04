@@ -112,3 +112,4 @@ def test_bitbucket_evidence_contracts_are_in_openapi(client: TestClient) -> None
     assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/source" in paths
     assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/source/ingest" in paths
     assert "/api/v1/integrations/bitbucket/repositories/{repo_slug}/diff/ingest" in paths
+    assert "/api/v1/core/users" in paths

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 const navItems = [
   { label: "Dashboard", href: "/" },
   { label: "Auth", href: "/auth" },
+  { label: "Admin", href: "/admin" },
   { label: "Setup", href: "/setup" },
   { label: "Ingestion", href: "/ingestion" },
   { label: "Explorer", href: "/explorer" },

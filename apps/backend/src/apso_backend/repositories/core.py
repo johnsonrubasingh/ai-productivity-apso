@@ -1,8 +1,8 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from apso_backend.db.models import Project, Tenant, WorkItem
-from apso_backend.schemas.core import ProjectCreate, TenantCreate
+from apso_backend.db.models import Project, Tenant, UserProfile, WorkItem
+from apso_backend.schemas.core import ProjectCreate, TenantCreate, UserProfileCreate
 
 
 class TenantRepository:
@@ -49,6 +49,31 @@ class ProjectRepository:
         )
 
 
+class UserProfileRepository:
+    def __init__(self, session: Session):
+        self.session = session
+
+    def create(self, *, tenant_id: str, payload: UserProfileCreate) -> UserProfile:
+        profile = UserProfile(
+            tenant_id=tenant_id,
+            email=payload.email,
+            display_name=payload.display_name,
+            role=payload.role,
+            supabase_user_id=payload.supabase_user_id,
+        )
+        self.session.add(profile)
+        self.session.commit()
+        self.session.refresh(profile)
+        return profile
+
+    def list_for_tenant(self, tenant_id: str) -> list[UserProfile]:
+        return list(
+            self.session.scalars(
+                select(UserProfile).where(UserProfile.tenant_id == tenant_id).order_by(UserProfile.created_at.desc())
+            )
+        )
+
+
 class WorkItemReadRepository:
     def __init__(self, session: Session):
         self.session = session
@@ -62,4 +87,3 @@ class WorkItemReadRepository:
                 .limit(limit)
             )
         )
-

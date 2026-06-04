@@ -2,8 +2,16 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from apso_backend.db.session import get_db_session
-from apso_backend.repositories.core import ProjectRepository, TenantRepository, WorkItemReadRepository
-from apso_backend.schemas.core import ProjectCreate, ProjectRead, TenantCreate, TenantRead, WorkItemRead
+from apso_backend.repositories.core import ProjectRepository, TenantRepository, UserProfileRepository, WorkItemReadRepository
+from apso_backend.schemas.core import (
+    ProjectCreate,
+    ProjectRead,
+    TenantCreate,
+    TenantRead,
+    UserProfileCreate,
+    UserProfileRead,
+    WorkItemRead,
+)
 from apso_backend.security.context import RequestContext, get_request_context, require_min_role
 from apso_backend.services.audit import AuditService
 
@@ -59,6 +67,35 @@ def list_projects(
     return [
         ProjectRead.model_validate(project)
         for project in ProjectRepository(session).list_for_tenant(context.tenant_id)
+    ]
+
+
+@router.post("/users", response_model=UserProfileRead)
+def create_user_profile(
+    payload: UserProfileCreate,
+    context: RequestContext = Depends(require_min_role("admin")),
+    session: Session = Depends(get_db_session),
+) -> UserProfileRead:
+    profile = UserProfileRepository(session).create(tenant_id=context.tenant_id, payload=payload)
+    AuditService(session).record(
+        context=context,
+        action="user_profile.created",
+        resource_type="user_profile",
+        resource_id=profile.id,
+        metadata={"email": profile.email, "role": profile.role},
+        commit=True,
+    )
+    return UserProfileRead.model_validate(profile)
+
+
+@router.get("/users", response_model=list[UserProfileRead])
+def list_user_profiles(
+    context: RequestContext = Depends(require_min_role("admin")),
+    session: Session = Depends(get_db_session),
+) -> list[UserProfileRead]:
+    return [
+        UserProfileRead.model_validate(profile)
+        for profile in UserProfileRepository(session).list_for_tenant(context.tenant_id)
     ]
 
 

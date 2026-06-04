@@ -33,6 +33,24 @@ class ProjectRead(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class UserProfileCreate(BaseModel):
+    email: str = Field(min_length=3, max_length=320)
+    display_name: str | None = Field(default=None, max_length=200)
+    role: str = Field(default="developer", max_length=80)
+    supabase_user_id: str | None = Field(default=None, max_length=100)
+
+
+class UserProfileRead(BaseModel):
+    id: str
+    tenant_id: str
+    email: str
+    display_name: str | None = None
+    role: str
+    supabase_user_id: str | None = None
+
+    model_config = {"from_attributes": True}
+
+
 class WorkItemRead(BaseModel):
     id: str
     tenant_id: str
@@ -46,4 +64,3 @@ class WorkItemRead(BaseModel):
     description: str | None = None
 
     model_config = {"from_attributes": True}
-
