@@ -1,0 +1,62 @@
+environment: dev
+
+app:
+  frontend_url: "http://localhost:3000"
+  api_url: "http://localhost:8000"
+  cors_origins:
+    - "http://localhost:3000"
+
+integrations:
+  jira:
+    mode: live_read_only
+    base_url: "https://elixirlabs.atlassian.net/"
+    username_env: "JIRA_USERNAME"
+    token_env: "JIRA_API_TOKEN"
+  bitbucket:
+    mode: live_read_only
+    workspace: "or-pems-2025"
+    username_env: "BITBUCKET_USERNAME"
+    token_env: "BITBUCKET_API_TOKEN"
+    repositories:
+      - slug: "or-pems-plt-sandbox-web"
+        branch: "develop"
+      - slug: "or-pems-plt-sandbox-api"
+        branch: "develop"
+  aws:
+    mode: mock
+
+supabase:
+  url: "https://rwjfllhcjsujrhvkvtuz.supabase.co"
+  publishable_key_env: "SUPABASE_PUBLISHABLE_KEY"
+  anon_key_env: "SUPABASE_ANON_KEY"
+  service_role_key_env: "SUPABASE_SERVICE_ROLE_KEY"
+  db_url_env: "SUPABASE_DB_URL"
+  jwt_secret_env: "SUPABASE_JWT_SECRET"
+
+ai:
+  gateway_url: "http://localhost:8010"
+  ollama_base_url: "http://localhost:11434"
+  external_providers_enabled: false
+  default_provider: "ollama"
+  chat_model: "qwen2.5-coder:14b"
+  embedding_model: "qwen3-embedding:4b"
+
+storage:
+  provider: minio
+  endpoint: "http://localhost:9000"
+
+workflow:
+  provider: temporal
+  endpoint: "localhost:7233"
+
+cache:
+  provider: valkey
+  endpoint: "localhost:6379"
+
+security:
+  rate_limit_requests: 120
+  rate_limit_window_seconds: 60
+
+workspace:
+  repository_root: "runtime/repositories"
+  artifact_root: "runtime/artifacts"

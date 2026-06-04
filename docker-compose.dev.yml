@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: ./apps/backend
+    environment:
+      APSO_ENV: dev
+      PYTHONPATH: /app/src
+      JIRA_USERNAME: ${JIRA_USERNAME:-}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN:-}
+      BITBUCKET_USERNAME: ${BITBUCKET_USERNAME:-}
+      BITBUCKET_API_TOKEN: ${BITBUCKET_API_TOKEN:-}
+      SUPABASE_DB_URL: ${SUPABASE_DB_URL:-}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET:-}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/workspace/config:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      target: dev
+    environment:
+      APSO_BACKEND_API_URL: http://backend:8000/api/v1
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/v1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

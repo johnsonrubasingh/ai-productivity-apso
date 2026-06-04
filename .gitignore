@@ -1,0 +1,33 @@
+# APSO local secrets and environment files
+.env
+.env.*
+!.env.example
+.secrets/
+*.secret.*
+*.secrets.*
+
+# Local runtime/data
+runtime/
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.pytest_cache/
+pytest-cache-files-*
+__pycache__/
+*.pyc
+*.egg-info/
+*.tsbuildinfo
+_tmp_*
+
+# Generated/rendered document QA artifacts
+rendered_apso_plan/
+~$*.docx
+*.pdf
+
+# Local IDE/OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

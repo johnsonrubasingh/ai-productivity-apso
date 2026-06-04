@@ -1,0 +1,36 @@
+rules:
+  - id: apso-no-direct-ai-provider-calls
+    message: Business code must call AI providers only through APSO AI Gateway.
+    severity: ERROR
+    languages:
+      - python
+    patterns:
+      - pattern-either:
+          - pattern: openai.$FUNC(...)
+          - pattern: anthropic.$FUNC(...)
+          - pattern: google.generativeai.$FUNC(...)
+    paths:
+      exclude:
+        - /apps/backend/src/apso_backend/ai/gateway.py
+        - /apps/backend/src/apso_backend/ai/providers/**
+
+  - id: apso-no-hardcoded-write-jira-scope
+    message: Jira write scope is backlog-only and must not be required by MVP code.
+    severity: ERROR
+    languages:
+      - python
+      - typescript
+    pattern: '"write:jira-work"'
+    paths:
+      exclude:
+        - /apps/backend/src/apso_backend/api/routes/integrations.py
+        - /docs/**
+        - /build_apso_locked_plan.py
+        - /build_apso_comprehensive_docs.py
+
+  - id: apso-no-shell-true-scanner-execution-default
+    message: Scanner execution must default to dry-run/false unless explicitly requested.
+    severity: WARNING
+    languages:
+      - python
+    pattern: "execute_scanners: bool = True"

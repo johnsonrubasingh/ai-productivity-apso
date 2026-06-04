@@ -1,0 +1,20 @@
+title = "APSO Gitleaks Configuration"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "APSO non-secret examples and scanner fixtures"
+paths = [
+  '''scripts/quality/production_readiness_check\.py''',
+  '''docs/security/FRONTEND_AUTH\.md''',
+  '''docs/security/SECRETS_HANDLING\.md''',
+  '''apps/frontend/node_modules/''',
+  '''apps/frontend/\.next/''',
+  '''apps/backend/pytest-cache-files-.*''',
+  '''rendered_apso_plan/''',
+]
+
+regexes = [
+  '''postgresql://postgres:\$dbPassword@''',
+]

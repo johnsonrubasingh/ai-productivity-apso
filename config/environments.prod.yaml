@@ -1,0 +1,58 @@
+environment: prod
+
+app:
+  frontend_url: "${APSO_FRONTEND_URL}"
+  api_url: "${APSO_API_URL}"
+  cors_origins:
+    - "${APSO_FRONTEND_URL}"
+
+integrations:
+  jira:
+    mode: live_read_only
+    base_url: "${JIRA_BASE_URL}"
+    username_env: "JIRA_USERNAME"
+    token_env: "JIRA_API_TOKEN"
+  bitbucket:
+    mode: live_read_only
+    workspace: "${BITBUCKET_WORKSPACE}"
+    username_env: "BITBUCKET_USERNAME"
+    token_env: "BITBUCKET_API_TOKEN"
+    repositories: []
+  aws:
+    mode: mock_until_credentials_supplied
+
+supabase:
+  url: "${SUPABASE_URL}"
+  publishable_key_env: "SUPABASE_PUBLISHABLE_KEY"
+  anon_key_env: "SUPABASE_ANON_KEY"
+  service_role_key_env: "SUPABASE_SERVICE_ROLE_KEY"
+  db_url_env: "SUPABASE_DB_URL"
+  jwt_secret_env: "SUPABASE_JWT_SECRET"
+
+ai:
+  gateway_url: "${AI_GATEWAY_URL}"
+  ollama_base_url: "${OLLAMA_BASE_URL}"
+  external_providers_enabled: false
+  default_provider: "ollama"
+  chat_model: "qwen2.5-coder:14b"
+  embedding_model: "qwen3-embedding:4b"
+
+storage:
+  provider: minio
+  endpoint: "${MINIO_ENDPOINT}"
+
+workflow:
+  provider: temporal
+  endpoint: "${TEMPORAL_ENDPOINT}"
+
+cache:
+  provider: valkey
+  endpoint: "${VALKEY_ENDPOINT}"
+
+security:
+  rate_limit_requests: 120
+  rate_limit_window_seconds: 60
+
+workspace:
+  repository_root: "${APSO_REPOSITORY_ROOT}"
+  artifact_root: "${APSO_ARTIFACT_ROOT}"

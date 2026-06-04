@@ -1,0 +1,52 @@
+services:
+  backend:
+    build:
+      context: ./apps/backend
+    environment:
+      APSO_ENV: prod
+      PYTHONPATH: /app/src
+      APSO_FRONTEND_URL: ${APSO_FRONTEND_URL:?required}
+      APSO_API_URL: ${APSO_API_URL:?required}
+      JIRA_BASE_URL: ${JIRA_BASE_URL:?required}
+      JIRA_USERNAME: ${JIRA_USERNAME:?required}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN:?required}
+      BITBUCKET_WORKSPACE: ${BITBUCKET_WORKSPACE:?required}
+      BITBUCKET_USERNAME: ${BITBUCKET_USERNAME:?required}
+      BITBUCKET_API_TOKEN: ${BITBUCKET_API_TOKEN:?required}
+      SUPABASE_URL: ${SUPABASE_URL:?required}
+      SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:?required}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:?required}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:?required}
+      SUPABASE_DB_URL: ${SUPABASE_DB_URL:?required}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET:?required}
+      AI_GATEWAY_URL: ${AI_GATEWAY_URL:-http://backend:8000/api/v1/ai}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:?required}
+      TEMPORAL_ENDPOINT: ${TEMPORAL_ENDPOINT:?required}
+      VALKEY_ENDPOINT: ${VALKEY_ENDPOINT:?required}
+      APSO_REPOSITORY_ROOT: /var/lib/apso/repositories
+      APSO_ARTIFACT_ROOT: /var/lib/apso/artifacts
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/workspace/config:ro
+      - apso_runtime:/var/lib/apso
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      target: runner
+    environment:
+      APSO_BACKEND_API_URL: http://backend:8000/api/v1
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?required}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  apso_runtime:
