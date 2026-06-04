@@ -26,10 +26,21 @@ calls require a bearer token:
 Authorization: Bearer <supabase-access-token>
 ```
 
-The `/auth` page stores a bearer token in browser `sessionStorage` and verifies
-it through `/api/v1/auth/me`.
+The `/auth` page uses Supabase Auth email/password sign-in when these public
+frontend variables are configured:
 
-## Next Hardening Step
+```text
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+```
 
-Replace manual token entry with Supabase Auth UI/session handling before a
-commercial release. The backend contract is already ready for Supabase JWTs.
+After sign-in, the returned Supabase access token is mirrored into
+`sessionStorage` for backend API calls and verified through `/api/v1/auth/me`.
+Manual bearer-token entry remains available as a development and troubleshooting
+fallback.
+
+## Remaining Hardening
+
+Before commercial production, validate the full browser sign-in, token refresh,
+sign-out, and backend `/auth/me` flow against the target Supabase project in both
+`dev` and `prod`.
