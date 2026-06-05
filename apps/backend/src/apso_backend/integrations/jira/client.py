@@ -41,48 +41,76 @@ class JiraClient:
         if self.settings.mode != "live_read_only":
             return {"issues": [], "mock": True}
 
+        return await self._get_json(
+            "/rest/api/3/search/jql",
+            params={"jql": jql, "maxResults": max_results},
+            timeout=30,
+        )
+
+    async def check_connection(self) -> dict:
+        if self.settings.mode != "live_read_only":
+            return {"ok": True, "mode": self.settings.mode, "mock": True}
+
+        if not self._credentials_configured:
+            return {"ok": False, "mode": self.settings.mode, "reason": "missing_credentials"}
+
+        try:
+            data = await self._get_json("/rest/api/3/myself", timeout=15)
+        except httpx.HTTPStatusError as exc:
+            return {"ok": False, "mode": self.settings.mode, "status_code": exc.response.status_code}
+        return {
+            "ok": True,
+            "mode": self.settings.mode,
+            "account_id": data.get("accountId"),
+            "display_name": data.get("displayName"),
+        }
+
+    @property
+    def _credentials_configured(self) -> bool:
+        import os
+
+        return bool(os.getenv(self.settings.username_env) and os.getenv(self.settings.token_env))
+
+    def _credentials(self) -> tuple[str, str]:
         import os
 
         username = os.getenv(self.settings.username_env)
         token = os.getenv(self.settings.token_env)
         if not username or not token:
             raise RuntimeError("Jira credentials are not configured")
+        return username, token
 
-        url = self.settings.base_url.rstrip("/") + "/rest/api/3/search"
-        async with httpx.AsyncClient(timeout=30) as client:
-            response = await client.get(
-                url,
-                params={"jql": jql, "maxResults": max_results},
+    async def _get_json(self, path: str, *, params: dict | None = None, timeout: int = 30) -> dict:
+        username, token = self._credentials()
+        base_url = self.settings.base_url.rstrip("/")
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            direct = await client.get(
+                base_url + path,
+                params=params,
                 auth=(username, token),
                 headers={"Accept": "application/json"},
             )
-            response.raise_for_status()
-            return response.json()
+            if direct.status_code != 401:
+                direct.raise_for_status()
+                return direct.json()
 
-    async def check_connection(self) -> dict:
-        if self.settings.mode != "live_read_only":
-            return {"ok": True, "mode": self.settings.mode, "mock": True}
-
-        import os
-
-        username = os.getenv(self.settings.username_env)
-        token = os.getenv(self.settings.token_env)
-        if not username or not token:
-            return {"ok": False, "mode": self.settings.mode, "reason": "missing_credentials"}
-
-        url = self.settings.base_url.rstrip("/") + "/rest/api/3/myself"
-        async with httpx.AsyncClient(timeout=15) as client:
-            response = await client.get(
-                url,
+            cloud_id = await self._cloud_id(client)
+            gateway = await client.get(
+                f"https://api.atlassian.com/ex/jira/{cloud_id}{path}",
+                params=params,
                 auth=(username, token),
                 headers={"Accept": "application/json"},
             )
-            if response.status_code >= 400:
-                return {"ok": False, "mode": self.settings.mode, "status_code": response.status_code}
-            data = response.json()
-            return {
-                "ok": True,
-                "mode": self.settings.mode,
-                "account_id": data.get("accountId"),
-                "display_name": data.get("displayName"),
-            }
+            gateway.raise_for_status()
+            return gateway.json()
+
+    async def _cloud_id(self, client: httpx.AsyncClient) -> str:
+        response = await client.get(
+            self.settings.base_url.rstrip("/") + "/_edge/tenant_info",
+            headers={"Accept": "application/json"},
+        )
+        response.raise_for_status()
+        cloud_id = response.json().get("cloudId")
+        if not cloud_id:
+            raise RuntimeError("Jira cloudId could not be resolved")
+        return str(cloud_id)

@@ -56,8 +56,8 @@ def normalize_issue(issue: dict[str, Any], settings: JiraSettings) -> JiraIssueS
 
 
 def normalize_search_response(payload: dict[str, Any], settings: JiraSettings) -> tuple[int, int, list[JiraIssueSummary]]:
-    total = int(payload.get("total", 0))
-    max_results = int(payload.get("maxResults", len(payload.get("issues", []))))
-    issues = [normalize_issue(issue, settings) for issue in payload.get("issues", [])]
+    raw_issues = payload.get("issues", [])
+    total = int(payload.get("total", len(raw_issues)))
+    max_results = int(payload.get("maxResults", len(raw_issues)))
+    issues = [normalize_issue(issue, settings) for issue in raw_issues]
     return total, max_results, issues
-

@@ -1,14 +1,15 @@
 # APSO Live Validation Status
 
-Date: 2026-06-04
+Date: 2026-06-05
 Environment: dev
 
 ## Summary
 
 Supabase dev database validation passed through the Supabase shared pooler.
 Bitbucket live read-only validation passed for the configured workspace and
-repositories. Jira live validation is blocked because Atlassian returns HTTP
-401 for the provided Jira email/token pair.
+repositories. Jira authentication now passes through the Atlassian API gateway,
+but Jira project and issue visibility are still empty for the configured
+account/token.
 
 No secrets are stored in this document.
 
@@ -28,22 +29,30 @@ Status: passed
 
 ## Jira
 
-Status: blocked
+Status: partially passed
 
 - Backend configuration loaded Jira base URL and credential env vars.
-- Jira connection check reached Atlassian.
-- Atlassian returned HTTP 401 for the configured Jira token.
-- The same token also returned HTTP 401 when tested with the alternate local Git
-  identity email.
+- Direct site Basic Auth returns HTTP 401 for the scoped token.
+- Atlassian gateway Basic Auth succeeds with the resolved cloud ID.
+- APSO now supports both classic direct Jira tokens and scoped gateway tokens.
+- Jira `/myself` validation passes.
+- Jira search uses the current `/rest/api/3/search/jql` endpoint because the
+  legacy `/rest/api/3/search` endpoint returns HTTP 410 in Jira Cloud.
+- Search JQL executed successfully but returned zero issues.
+- Jira project visibility check returned zero projects.
+- Jira ingestion executed successfully but stored zero work items because no
+  visible issues were returned.
 
 Required next action:
 
-- Regenerate a Jira API token for the Jira account that can access
+- Grant the Jira account/token visibility to at least one Jira project on
   `https://elixirlabs.atlassian.net/`.
-- Ensure the token has:
+- Confirm the account can browse issues in Jira UI.
+- Keep the current scopes:
   - `read:account`
   - `read:jira-work`
-- Update the ignored local `.env.dev.local` value and rerun connector checks.
+- Rerun Jira project search, issue search, and ingestion after project access is
+  granted.
 
 ## Bitbucket
 
@@ -78,7 +87,7 @@ Observed dev database counts after validation:
 
 ## APSO Smoke
 
-Status: passed with Jira blocked
+Status: passed with Jira data visibility pending
 
 Validated routes:
 
@@ -86,6 +95,7 @@ Validated routes:
 - integrations
 - AI task catalog
 - Jira and Bitbucket scope contracts
+- Jira connection check
 - Bitbucket connection check
 - runtime config
 - auth context
@@ -102,6 +112,6 @@ Validated routes:
 
 The smoke run reported:
 
-- Jira check: failed, HTTP 401
+- Jira check: passed
 - Bitbucket check: passed
 - Backend readiness: ready
